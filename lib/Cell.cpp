@@ -15,8 +15,8 @@ Cell::State Cell::get_state() const {
     return m_state;
 }
 
-void Cell::set_state(Cell::State state) {
-    m_state = state;
+void Cell::inc_state() {
+    m_state = static_cast<Cell::State>(m_state + 1);
 }
 
 bool Cell::is_mine() const {
@@ -25,6 +25,36 @@ bool Cell::is_mine() const {
 
 void Cell::make_mine() {
     m_state = Cell::State::MINE;
+}
+
+// add tests
+std::string Cell::to_string() const {
+    if (m_hidden) {
+        return "--";
+    }
+
+    switch (m_state) {
+        case MINE:  
+            return "XX";
+        case ZERO: 
+            return "00";
+        case ONE: 
+            return "01";
+        case TWO:  
+            return "02";
+        case THREE: 
+            return "03";
+        case FOUR:
+            return "04";
+        case FIVE: 
+            return "05";
+        case SIX:  
+            return "06";
+        case SEVEN:
+            return "07";
+        case EIGHT:
+            return "08";
+    }
 }
 
 } // namespace minesweeper

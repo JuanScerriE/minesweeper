@@ -1,12 +1,12 @@
 #pragma once
 
-#include <cstdint>
+#include <string>
 
 namespace minesweeper {
 
 class Cell {
 public:
-    enum State : int8_t {
+    enum State {
         MINE  = -1,
         ZERO  = 0,
         ONE   = 1,
@@ -36,11 +36,13 @@ public:
 
     // Methods related to m_state
     State get_state() const;
-    void set_state(State state);
+    void inc_state();
 
     // Methods related to m_state when its a MINE
     bool is_mine() const;
     void make_mine();
+
+    std::string to_string() const;
 
 private:
     bool m_hidden = true;
