@@ -54,11 +54,11 @@ TEST_F(CellTest, MineCellToString) {
 
 TEST_F(BoardTest, PopulateBoard) {
     srand(0); 
-    board.populate_board();
+    board.populate_board(2, 0);
 
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
-            board.open_cell(i, j);
+            board.reveal(i, j);
         }
     }
 
@@ -84,34 +84,58 @@ TEST_F(BoardTest, PopulateBoard) {
 
 TEST_F(BoardTest, HasHitMine) {
     srand(0); 
-    board.populate_board();
-    board.open_cell(0, 0);
+    board.populate_board(2, 0);
+    board.reveal(0, 0);
     EXPECT_EQ(board.has_hit_mine(), true);
 }
 
 TEST_F(BoardTest, HasNotHitMine) {
     srand(0); 
-    board.populate_board();
-    board.open_cell(0, 1);
+    board.populate_board(2, 0);
+    board.reveal(0, 1);
     EXPECT_EQ(board.has_hit_mine(), false);
 }
 
 TEST_F(BoardTest, HasNotClearedBoard) {
     srand(0); 
-    board.populate_board();
+    board.populate_board(2, 0);
 
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
-            board.open_cell(i, j);
+            board.reveal(i, j);
         }
     }
 
     EXPECT_EQ(board.has_cleared_board(), false);
 }
 
-TEST_F(BoardTest, HasClearedBoard) {
+TEST_F(BoardTest, RevealZeroCellAndNeighbouringCellsRecursively) {
+    srand(0); 
+    board.populate_board(2, 0);
+    board.reveal(2, 0);
+
+    EXPECT_EQ(board.to_string(),
+"-- -- -- 01 00 00 01 -- -- -- -- -- -- -- -- --\n"
+"01 02 01 01 00 00 01 -- -- -- -- -- -- -- -- --\n"
+"00 00 00 00 00 00 01 01 02 -- -- -- -- -- -- --\n"
+"00 01 02 02 01 00 00 00 01 01 02 03 -- -- -- --\n"
+"00 01 -- -- 01 00 00 00 00 00 00 01 01 02 -- --\n"
+"01 03 -- -- 01 00 00 00 00 00 00 00 00 01 -- --\n"
+"-- -- -- -- 01 01 00 00 00 00 00 01 01 01 -- --\n"
+"-- -- -- -- -- 01 00 00 00 00 00 01 -- -- -- --\n"
+"-- -- -- -- -- 02 01 01 00 00 00 01 -- -- -- --\n"
+"-- -- -- -- -- -- -- 02 00 00 00 01 -- -- -- --\n"
+"-- -- -- -- -- -- -- 02 00 01 01 02 -- -- -- --\n"
+"-- -- -- -- -- -- 02 01 00 01 -- -- -- -- -- --\n"
+"-- -- -- -- -- -- 01 00 00 01 01 01 -- -- -- --\n"
+"-- -- -- -- -- -- 01 01 00 00 00 01 -- -- -- --\n"
+"-- -- -- -- -- -- -- 01 00 00 01 02 -- -- -- --\n"
+"-- -- -- -- -- -- -- 01 00 00 01 -- -- -- -- --");
+}
+
+TEST_F(BoardTest, HasClearedBoardWithoutHittingMine) {
     srand(0);
-    board.populate_board();
+    board.populate_board(2, 0);
 
     for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
@@ -155,7 +179,7 @@ TEST_F(BoardTest, HasClearedBoard) {
                 !(i == 15 && j == 1) &&
                 !(i == 15 && j == 5) &&
                 !(i == 15 && j == 11)) {
-                board.open_cell(i, j);
+                board.reveal(i, j);
             }
         }
     }
