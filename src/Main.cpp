@@ -1,9 +1,8 @@
-#include <Board.hpp>
+#include <Minesweeper.hpp>
 #include <iostream>
 
 int main() {
-    minesweeper::Board board;
-    board.populate_board();
-    std::cout << board.to_string() << std::endl;
+    minesweeper::Minesweeper game;
+    game.run();
     return 0;
 }
