@@ -28,6 +28,7 @@ public:
 
     std::string to_string() const;
     std::string to_curs_string() const;
+    int num_of_revealed_cells() const;
     
 private:
     void calc_mine_counts(int r, int c);

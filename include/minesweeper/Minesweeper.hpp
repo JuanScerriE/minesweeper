@@ -21,23 +21,30 @@ public:
 private:
     void screen_setup();
     void board_setup();
-    void refresh_status(int r, int c);
+    void refresh_status();
     void refresh_board();
     void game_loop();
 
     Board m_board;
 
-    int m_board_status_rows;
-    int m_board_status_cols;
-    WINDOW* m_window_board_status;
+    int m_parent_win_rows;
+    int m_parent_win_cols;
+    WINDOW* m_parent_win;
 
-    int m_board_border_rows;
-    int m_board_border_cols;
-    WINDOW* m_window_board_border;
+    int m_board_win_rows;
+    int m_board_win_cols;
+    WINDOW* m_board_win;
 
-    int m_board_rows;
-    int m_board_cols;
-    WINDOW* m_window_board;
+    int m_board_subwin_rows;
+    int m_board_subwin_cols;
+    WINDOW* m_board_subwin;
+
+    int m_status_win_rows;
+    int m_status_win_cols;
+    WINDOW* m_status_win;
+
+    int m_raw_x = 0;
+    int m_raw_y = 0;
 
     int m_x = 0;
     int m_y = 0;

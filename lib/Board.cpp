@@ -2,6 +2,7 @@
 
 #include <string>
 #include <iostream>
+#include <sstream>
 
 namespace minesweeper {
 
@@ -97,6 +98,10 @@ std::string Board::to_curs_string() const {
     }
 
     return board;
+}
+
+int Board::num_of_revealed_cells() const {
+    return sc_board_size * sc_board_size - m_num_hidden_cells;
 }
 
 bool Board::has_hit_mine() const {
