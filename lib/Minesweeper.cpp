@@ -15,18 +15,6 @@ void Minesweeper::screen_setup() {
     intrflush(stdscr, FALSE);
     keypad(stdscr, TRUE);
 
-    // Rename everything into a grid because naming is going to
-    // get complicated.
-    // Let us create a main_win
-    // then we have a title_subwin
-    // then a vertical line
-    // a board_border_subwin
-    // which has a board_subwin
-    // 
-
-    // Setting up the dimensions and position of the status
-    // board
-
     // Board window dimensions
     m_board_win_rows = m_board.sc_board_size + 1;
     m_board_win_cols = (m_board.sc_board_size + 1) * 2 + (m_board.sc_board_size + 1) - 1;
