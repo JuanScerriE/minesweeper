@@ -36,13 +36,13 @@ public:
 
     // Methods related to m_state
     State get_state() const;
-    void inc_state();
-
-    // Methods related to m_state when its a MINE
+    bool is_zero() const;
     bool is_mine() const;
+    void inc_state();
     void make_mine();
 
     std::string to_string() const;
+    std::string to_curs_string() const;
 
 private:
     bool m_hidden = true;
