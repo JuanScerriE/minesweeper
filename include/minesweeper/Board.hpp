@@ -23,6 +23,7 @@ public:
     void populate_board(int starting_r, int starting_c);
     void reveal(int r, int c);
     void reset();
+    void secret_autocomplete();
 
     bool has_hit_mine() const;
     bool has_cleared_board() const;

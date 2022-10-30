@@ -19,7 +19,7 @@ public:
 
     void run();
 private:
-    void screen_setup();
+    void setup();
     void game_loop();
 
     void handle_movement(char input);
@@ -36,10 +36,10 @@ private:
 
     Board m_board;
 
-    WINDOW* m_parent_win;
-    WINDOW* m_board_win;
-    WINDOW* m_board_subwin;
-    WINDOW* m_status_win;
+    WINDOW* m_parent_win = nullptr;
+    WINDOW* m_board_win = nullptr;
+    WINDOW* m_board_subwin = nullptr;
+    WINDOW* m_status_win = nullptr;
 
     int m_raw_x = 0;
     int m_raw_y = 0;
@@ -47,6 +47,8 @@ private:
     int m_y = 0;
 
     bool m_populate_board = true;
+
+    std::string m_end_message;
 };
 
 } // namespace minesweeper

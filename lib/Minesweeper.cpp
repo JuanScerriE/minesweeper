@@ -1,4 +1,5 @@
 // std
+#include <iostream>
 
 // ncurses
 #include <ncurses.h>
@@ -11,23 +12,37 @@
 namespace minesweeper {
 
 void Minesweeper::run() {
-    screen_setup();
-    game_loop();
+    setup();
 }
 
 Minesweeper::~Minesweeper() {
-    delwin(m_board_subwin);
-    delwin(m_board_win);
-    delwin(m_status_win);
-    delwin(m_parent_win);
+    if (m_board_subwin != nullptr) {
+        delwin(m_board_subwin);
+    }
+    if (m_board_win != nullptr) {
+        delwin(m_board_win);
+    }
+    if (m_status_win != nullptr) {
+        delwin(m_status_win);
+    }
+    if (m_parent_win != nullptr) {
+        delwin(m_parent_win);
+    }
+
     endwin();
+
+    if (m_end_message.length() > 0) {
+        std::cout << m_end_message << std::endl;
+    }
 
     // Will free any memory used if linked with debug
     // ncurses to make detecting memory leaks easier
+#ifdef __linux__
     exit_curses(0);
+#endif
 }
 
-void Minesweeper::screen_setup() {
+void Minesweeper::setup() {
     initscr();
     cbreak();
     noecho();
@@ -49,7 +64,7 @@ void Minesweeper::screen_setup() {
         + m_board.sc_board_size - 1;
 
     // Status window dimensions
-    int status_win_rows = 5;
+    int status_win_rows = 7;
     int status_win_cols = board_win_cols;
 
     // Parent window dimensions
@@ -64,11 +79,17 @@ void Minesweeper::screen_setup() {
     int max_x = getmaxx(stdscr);
     int max_y = getmaxy(stdscr);
 
+    if (parent_win_cols + (max_x - parent_win_cols) / 4 >= max_x ||
+        parent_win_rows + (max_y - parent_win_rows) / 2 >= max_y) {
+        m_end_message = "Terminal size is too small";
+        return;
+    }
+
     // Center the board horizontally and vertically
     m_parent_win = newwin(
             parent_win_rows,
             parent_win_cols,
-            (max_y - parent_win_rows) / 2,
+            (max_y - parent_win_rows) / 4,
             (max_x - parent_win_cols) / 2);
 
     m_board_win = derwin(
@@ -95,6 +116,8 @@ void Minesweeper::screen_setup() {
 
     refresh_status_win();
     refresh_board_subwin(0, 0);
+
+    game_loop();
 }
 
 void Minesweeper::game_loop() {
@@ -106,10 +129,14 @@ void Minesweeper::game_loop() {
             input == 'k' ||
             input == 'l') {
             handle_movement(input); 
+        } else if (input == 'W' && !m_populate_board) { // Hidden command to autocomplete
+            m_board.secret_autocomplete(); 
         } else if (input == 'r') { // Reset
             m_board.reset();
             m_populate_board = true;
-        } else if (input == ' ') { // Reveal
+        } else if (input == ' ' &&
+                !m_board.has_hit_mine() &&
+                !m_board.has_cleared_board()) { // Reveal
             if (m_populate_board) {
                 m_board.populate_board(m_y, m_x);
                 m_populate_board = false;
@@ -168,15 +195,25 @@ void Minesweeper::draw_board_subwin() {
 }
 
 void Minesweeper::draw_status_win() {
-    wmove(m_status_win, 0, 0);
+    wmove(m_status_win, 0, 1);
+
+    if (m_board.has_hit_mine()) {
+        waddstr(m_status_win, "YOU HAVE HIT A MINE! (Press r to retry)");
+    } else if (m_board.has_cleared_board()) {
+        waddstr(m_status_win, "YOU HAVE CLEARED THE BOARD! (Press r to retry)");
+    } else {
+        waddstr(m_status_win, "                                              ");
+    }
+
+    wmove(m_status_win, 2, 1);
     wprintw(m_status_win, "Pos:     (%02d, %02d)", m_x, m_y);
-    wmove(m_status_win, 1, 0);
+    wmove(m_status_win, 3, 1);
     waddstr(m_status_win, "ESC:     Exit");
-    wmove(m_status_win, 2, 0);
+    wmove(m_status_win, 4, 1);
     waddstr(m_status_win, "h,j,k,l: Left, down, up, right");
-    wmove(m_status_win, 3, 0);
+    wmove(m_status_win, 5, 1);
     waddstr(m_status_win, "SPACE:   Reveal hidden cell");
-    wmove(m_status_win, 4, 0);
+    wmove(m_status_win, 6, 1);
     waddstr(m_status_win, "r:       Reset board");
 }
 

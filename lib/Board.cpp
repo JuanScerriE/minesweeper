@@ -58,6 +58,20 @@ void Board::reset() {
             m_board[i][j].hide();
         }
     }
+
+    m_has_hit_mine = false;
+    m_num_hidden_cells = sc_board_size * sc_board_size;
+}
+
+void Board::secret_autocomplete() {
+    for (int i = 0; i < sc_board_size; i++) {
+        for (int j = 0; j < sc_board_size; j++) {
+            if (!m_board[i][j].is_mine() && m_board[i][j].is_hidden()) {
+                m_board[i][j].unhide();
+                m_num_hidden_cells--;
+            }
+        }
+    }
 }
 
 bool Board::has_hit_mine() const {
