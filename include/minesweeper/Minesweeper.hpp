@@ -28,6 +28,7 @@ private:
     void draw_parent_win();
     void draw_board_win();
     void draw_board_subwin();
+    void init_draw_status_win();
     void draw_status_win();
     void refresh_parent_win();
     void refresh_board_win();

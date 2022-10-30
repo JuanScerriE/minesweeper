@@ -7,8 +7,6 @@
 // minesweeper
 #include <Minesweeper.hpp>
 
-#define ESC 27
-
 namespace minesweeper {
 
 void Minesweeper::run() {
@@ -81,7 +79,7 @@ void Minesweeper::setup() {
 
     if (parent_win_cols + (max_x - parent_win_cols) / 4 >= max_x ||
         parent_win_rows + (max_y - parent_win_rows) / 2 >= max_y) {
-        m_end_message = "Terminal size is too small";
+        m_end_message = "minesweeper: Terminal size is too small!";
         return;
     }
 
@@ -114,6 +112,9 @@ void Minesweeper::setup() {
     refresh_parent_win();
     refresh_board_win();
 
+    // optimise rendering the draw menu
+    init_draw_status_win();
+
     refresh_status_win();
     refresh_board_subwin(0, 0);
 
@@ -128,7 +129,10 @@ void Minesweeper::game_loop() {
             input == 'j' ||
             input == 'k' ||
             input == 'l') {
+            // Update windows in handle_movement
+            // to reduce redraws
             handle_movement(input); 
+            continue;
         } else if (input == 'W' && !m_populate_board) { // Hidden command to autocomplete
             m_board.secret_autocomplete(); 
         } else if (input == 'r') { // Reset
@@ -143,7 +147,7 @@ void Minesweeper::game_loop() {
             }
 
             m_board.reveal(m_y, m_x);
-        } else if (input == ESC) { // Exit
+        } else if (input == 'q') { // Exit
             break;
         }
 
@@ -156,15 +160,23 @@ void Minesweeper::handle_movement(char input) {
     if (input == 'h' && m_x - 1 >= 0) {
         m_raw_x -= to_horizontal_raw(1); 
         m_x -= 1;
+        refresh_status_win();
+        refresh_board_subwin(m_raw_x, m_raw_y);
     } else if (input == 'j' && m_y + 1 < m_board.sc_board_size) {
         m_raw_y += 1;
         m_y += 1;
+        refresh_status_win();
+        refresh_board_subwin(m_raw_x, m_raw_y);
     } else if (input == 'k' && m_y - 1 >= 0) {
         m_raw_y -= 1;
         m_y -= 1;
+        refresh_status_win();
+        refresh_board_subwin(m_raw_x, m_raw_y);
     } else if (input == 'l' && m_x + 1 < m_board.sc_board_size) {
         m_raw_x += to_horizontal_raw(1);
         m_x += 1;
+        refresh_status_win();
+        refresh_board_subwin(m_raw_x, m_raw_y);
     }
 }
 
@@ -194,6 +206,17 @@ void Minesweeper::draw_board_subwin() {
     waddstr(m_board_subwin, m_board.to_curs_string().c_str());
 }
 
+void Minesweeper::init_draw_status_win() {
+    wmove(m_status_win, 3, 1);
+    waddstr(m_status_win, "q:       Quit");
+    wmove(m_status_win, 4, 1);
+    waddstr(m_status_win, "h,j,k,l: Left, down, up, right");
+    wmove(m_status_win, 5, 1);
+    waddstr(m_status_win, "SPACE:   Reveal hidden cell");
+    wmove(m_status_win, 6, 1);
+    waddstr(m_status_win, "r:       Reset board");
+}
+
 void Minesweeper::draw_status_win() {
     wmove(m_status_win, 0, 1);
 
@@ -207,14 +230,6 @@ void Minesweeper::draw_status_win() {
 
     wmove(m_status_win, 2, 1);
     wprintw(m_status_win, "Pos:     (%02d, %02d)", m_x, m_y);
-    wmove(m_status_win, 3, 1);
-    waddstr(m_status_win, "ESC:     Exit");
-    wmove(m_status_win, 4, 1);
-    waddstr(m_status_win, "h,j,k,l: Left, down, up, right");
-    wmove(m_status_win, 5, 1);
-    waddstr(m_status_win, "SPACE:   Reveal hidden cell");
-    wmove(m_status_win, 6, 1);
-    waddstr(m_status_win, "r:       Reset board");
 }
 
 void Minesweeper::refresh_parent_win() {
@@ -223,25 +238,23 @@ void Minesweeper::refresh_parent_win() {
 }
 
 void Minesweeper::refresh_board_win() {
-    touchwin(m_parent_win);
+    // touchwin(m_parent_win);
     draw_board_win();
     wrefresh(m_board_win);
 }
 
 void Minesweeper::refresh_board_subwin(int x, int y) {
-    touchwin(m_board_win);
-    touchwin(m_parent_win);
+    // touchwin(m_board_win);
+    // touchwin(m_parent_win);
     draw_board_subwin();
     wmove(m_board_subwin, y, x);
     wrefresh(m_board_subwin);
 }
 
 void Minesweeper::refresh_status_win() {
-    touchwin(m_parent_win);
+    // touchwin(m_parent_win);
     draw_status_win();
     wrefresh(m_status_win);
 }
 
 } // namespace minesweeper
-
-#undef ESC
