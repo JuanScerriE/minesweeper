@@ -6,19 +6,6 @@
 
 namespace minesweeper {
 
-void Board::calc_mine_counts(int r, int c) {
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            if ((i != 0 || j != 0) &&
-                (0 <= r + i && r + i < sc_board_size) && 
-                (0 <= c + j && c + j < sc_board_size) &&
-                !m_board[r + i][c + j].is_mine()) {
-                    m_board[r + i][c + j].inc_state();
-            }
-        }
-    }
-}
-
 void Board::populate_board(int starting_r, int starting_c) {
     int r;
     int c;
@@ -47,7 +34,7 @@ void Board::reveal(int r, int c) {
         (0 <= c && c < sc_board_size) &&
         m_board[r][c].is_hidden()) {
 
-        m_board[r][c].toggle_hidden();
+        m_board[r][c].unhide();
         m_has_hit_mine = m_board[r][c].is_mine();
         m_num_hidden_cells--;
 
@@ -62,6 +49,23 @@ void Board::reveal(int r, int c) {
             reveal(r + 1, c - 1); 
         }
     }
+}
+
+void Board::reset() {
+    for (int i = 0; i < sc_board_size; i++) {
+        for (int j = 0; j < sc_board_size; j++) {
+            m_board[i][j].make_zero();
+            m_board[i][j].hide();
+        }
+    }
+}
+
+bool Board::has_hit_mine() const {
+    return m_has_hit_mine;
+}
+
+bool Board::has_cleared_board() const {
+    return !m_has_hit_mine && m_num_hidden_cells == sc_num_of_mines;
 }
 
 std::string Board::to_string() const {
@@ -100,16 +104,18 @@ std::string Board::to_curs_string() const {
     return board;
 }
 
-int Board::num_of_revealed_cells() const {
-    return sc_board_size * sc_board_size - m_num_hidden_cells;
-}
 
-bool Board::has_hit_mine() const {
-    return m_has_hit_mine;
-}
-
-bool Board::has_cleared_board() const {
-    return !m_has_hit_mine && m_num_hidden_cells == sc_num_of_mines;
+void Board::calc_mine_counts(int r, int c) {
+    for (int i = -1; i <= 1; i++) {
+        for (int j = -1; j <= 1; j++) {
+            if ((i != 0 || j != 0) &&
+                (0 <= r + i && r + i < sc_board_size) && 
+                (0 <= c + j && c + j < sc_board_size) &&
+                !m_board[r + i][c + j].is_mine()) {
+                    m_board[r + i][c + j].inc_state();
+            }
+        }
+    }
 }
 
 } // namespace minesweeper

@@ -2,29 +2,36 @@
 
 namespace minesweeper {
 
-
 bool Cell::is_hidden() const {
     return m_hidden;
 }
 
-void Cell::toggle_hidden() {
-    m_hidden = !m_hidden;
+void Cell::hide() {
+    m_hidden = true;
+}
+
+void Cell::unhide() {
+    m_hidden = false;
 }
 
 Cell::State Cell::get_state() const {
     return m_state;
 }
 
-bool Cell::is_mine() const {
-    return m_state == Cell::State::MINE;
+void Cell::inc_state() {
+    m_state = static_cast<Cell::State>(m_state + 1);
 }
 
 bool Cell::is_zero() const {
     return m_state == Cell::State::ZERO;
 }
 
-void Cell::inc_state() {
-    m_state = static_cast<Cell::State>(m_state + 1);
+bool Cell::is_mine() const {
+    return m_state == Cell::State::MINE;
+}
+
+void Cell::make_zero() {
+    m_state = Cell::State::ZERO;
 }
 
 void Cell::make_mine() {
@@ -63,6 +70,5 @@ std::string Cell::to_string() const {
 std::string Cell::to_curs_string() const {
     return to_string();
 }
-
 
 } // namespace minesweeper

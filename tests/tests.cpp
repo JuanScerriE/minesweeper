@@ -19,9 +19,14 @@ TEST_F(CellTest, ByDefaultCellIsHidden) {
     EXPECT_EQ(cell.is_hidden(), true);
 }
 
-TEST_F(CellTest, ToggleHiddenCell) {
-    cell.toggle_hidden();
+TEST_F(CellTest, UnhideCell) {
+    cell.unhide();
     EXPECT_EQ(cell.is_hidden(), false);
+}
+
+TEST_F(CellTest, HideCell) {
+    cell.hide();
+    EXPECT_EQ(cell.is_hidden(), true);
 }
 
 TEST_F(CellTest, GetDefaultCellState) {
@@ -37,9 +42,14 @@ TEST_F(CellTest, ByDefaultCellIsNotMine) {
     EXPECT_EQ(cell.is_mine(), false);
 }
 
-TEST_F(CellTest, MakeCellAMine) {
+TEST_F(CellTest, MakeMineCell) {
     cell.make_mine();
     EXPECT_EQ(cell.is_mine(), true);
+}
+
+TEST_F(CellTest, MakeZeroCell) {
+    cell.make_zero();
+    EXPECT_EQ(cell.is_zero(), true);
 }
 
 TEST_F(CellTest, HiddenCellToString) {
@@ -48,8 +58,14 @@ TEST_F(CellTest, HiddenCellToString) {
 
 TEST_F(CellTest, MineCellToString) {
     cell.make_mine();
-    cell.toggle_hidden();
+    cell.unhide();
     EXPECT_EQ(cell.to_string(), "XX");
+}
+
+TEST_F(CellTest, ZeroCellToString) {
+    cell.make_zero();
+    cell.unhide();
+    EXPECT_EQ(cell.to_string(), "00");
 }
 
 TEST_F(BoardTest, PopulateBoard) {

@@ -8,6 +8,8 @@ project(
 
 set(CMAKE_CXX_STANDARD 17)
 
+set(NCURSES_NO_LEAKS TRUE)
+
 add_subdirectory(deps)
 add_subdirectory(lib)
 add_subdirectory(src)

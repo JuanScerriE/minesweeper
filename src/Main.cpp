@@ -4,5 +4,4 @@
 int main() {
     minesweeper::Minesweeper game;
     game.run();
-    return 0;
 }

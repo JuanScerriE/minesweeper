@@ -32,13 +32,17 @@ public:
 
     // Methods related to m_hidden
     bool is_hidden() const;
-    void toggle_hidden();
+    void hide();
+    void unhide();
 
     // Methods related to m_state
     State get_state() const;
+    void inc_state();
+
     bool is_zero() const;
     bool is_mine() const;
-    void inc_state();
+
+    void make_zero();
     void make_mine();
 
     std::string to_string() const;

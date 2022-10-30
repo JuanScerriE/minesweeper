@@ -22,13 +22,13 @@ public:
     
     void populate_board(int starting_r, int starting_c);
     void reveal(int r, int c);
+    void reset();
 
     bool has_hit_mine() const;
     bool has_cleared_board() const;
 
     std::string to_string() const;
     std::string to_curs_string() const;
-    int num_of_revealed_cells() const;
     
 private:
     void calc_mine_counts(int r, int c);
