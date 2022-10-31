@@ -10,8 +10,6 @@ void Board::populate_board(int starting_r, int starting_c) {
     int r;
     int c;
 
-    srand(time(0));
-
     for (int i = 0; i < sc_num_of_mines; i++) {
         for (;;) {
             r = rand() % sc_board_size;

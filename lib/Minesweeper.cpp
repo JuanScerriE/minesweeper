@@ -47,6 +47,9 @@ void Minesweeper::setup() {
     intrflush(stdscr, FALSE);
     keypad(stdscr, TRUE);
 
+    // Seed the random number generator with time
+    srand(time(0));
+
     // Board window dimensions
     int board_win_rows =
         m_board.sc_board_size + 1;

@@ -68,6 +68,9 @@ TEST_F(CellTest, ZeroCellToString) {
     EXPECT_EQ(cell.to_string(), "00");
 }
 
+
+
+
 TEST_F(BoardTest, PopulateBoard) {
     srand(0); 
     board.populate_board(2, 0);
@@ -96,7 +99,6 @@ TEST_F(BoardTest, PopulateBoard) {
 "02 02 02 02 XX 03 XX 01 00 00 01 02 XX 01 01 01\n"
 "XX XX 01 01 02 XX 02 01 00 00 01 XX 02 01 00 00");
 }
-
 
 TEST_F(BoardTest, HasHitMine) {
     srand(0); 
@@ -149,7 +151,7 @@ TEST_F(BoardTest, RevealZeroCellAndNeighbouringCellsRecursively) {
 "-- -- -- -- -- -- -- 01 00 00 01 -- -- -- -- --");
 }
 
-TEST_F(BoardTest, HasClearedBoardWithoutHittingMine) {
+TEST_F(BoardTest, HasClearedBoardWithoutHittingMineManually) {
     srand(0);
     board.populate_board(2, 0);
 
@@ -200,5 +202,12 @@ TEST_F(BoardTest, HasClearedBoardWithoutHittingMine) {
         }
     }
 
+    EXPECT_EQ(board.has_cleared_board(), true);
+}
+
+TEST_F(BoardTest, HasClearedBoardWithoutHittingMineWithSecretAutocomplete) {
+    srand(0);
+    board.populate_board(2, 0);
+    board.secret_autocomplete();
     EXPECT_EQ(board.has_cleared_board(), true);
 }
