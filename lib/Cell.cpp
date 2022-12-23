@@ -64,6 +64,8 @@ std::string Cell::to_string() const {
             return "07";
         case EIGHT:
             return "08";
+        default:
+            return "EE";
     }
 }
 
