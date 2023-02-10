@@ -23,6 +23,9 @@ private:
     void game_loop();
 
     void handle_movement(char input);
+    // Horizontal movement of the graphical cursor does not have a one to one
+    // correspondence with the position of the game cursor.
+    // Hence conversion is required.
     int to_horizontal_raw(int n);
 
     void draw_parent_win();
@@ -42,8 +45,13 @@ private:
     WINDOW* m_board_subwin = nullptr;
     WINDOW* m_status_win = nullptr;
 
+
+    // User for representing the cursor position graphically
     int m_raw_x = 0;
     int m_raw_y = 0;
+
+    // Used for representing the cursor position in the game
+    // board
     int m_x = 0;
     int m_y = 0;
 

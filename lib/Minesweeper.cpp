@@ -80,6 +80,7 @@ void Minesweeper::setup() {
     int max_x = getmaxx(stdscr);
     int max_y = getmaxy(stdscr);
 
+    // Make sure terminal size is sufficient
     if (parent_win_cols + (max_x - parent_win_cols) / 4 >= max_x ||
         parent_win_rows + (max_y - parent_win_rows) / 2 >= max_y) {
         m_end_message = "minesweeper: Terminal size is too small!";
@@ -115,7 +116,7 @@ void Minesweeper::setup() {
     refresh_parent_win();
     refresh_board_win();
 
-    // optimise rendering the draw menu
+    // Optimise rendering the draw menu
     init_draw_status_win();
 
     refresh_status_win();
@@ -138,19 +139,19 @@ void Minesweeper::game_loop() {
             continue;
         } else if (input == 'W' && !m_populate_board) { // Hidden command to autocomplete
             m_board.secret_autocomplete(); 
-        } else if (input == 'r') { // Reset
+        } else if (input == 'r') { // Reset board
             m_board.reset();
             m_populate_board = true;
         } else if (input == ' ' &&
                 !m_board.has_hit_mine() &&
-                !m_board.has_cleared_board()) { // Reveal
+                !m_board.has_cleared_board()) { // Reveal cell
             if (m_populate_board) {
                 m_board.populate_board(m_y, m_x);
                 m_populate_board = false;
             }
 
             m_board.reveal(m_y, m_x);
-        } else if (input == 'q') { // Exit
+        } else if (input == 'q') { // Quit game
             break;
         }
 
@@ -241,21 +242,17 @@ void Minesweeper::refresh_parent_win() {
 }
 
 void Minesweeper::refresh_board_win() {
-    // touchwin(m_parent_win);
     draw_board_win();
     wrefresh(m_board_win);
 }
 
 void Minesweeper::refresh_board_subwin(int x, int y) {
-    // touchwin(m_board_win);
-    // touchwin(m_parent_win);
     draw_board_subwin();
     wmove(m_board_subwin, y, x);
     wrefresh(m_board_subwin);
 }
 
 void Minesweeper::refresh_status_win() {
-    // touchwin(m_parent_win);
     draw_status_win();
     wrefresh(m_status_win);
 }

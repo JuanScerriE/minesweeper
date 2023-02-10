@@ -65,6 +65,8 @@ std::string Cell::to_string() const {
         case EIGHT:
             return "08";
         default:
+            // Unreachable but if reached for whatever reason
+            // "EE" denoted error
             return "EE";
     }
 }

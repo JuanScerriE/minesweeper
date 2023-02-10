@@ -19,12 +19,12 @@ public:
         EIGHT = 8,
     };
     
-    // Default normal constructor.
+    // Default normal constructor
     Cell() = default;
     ~Cell() = default;
 
     // Delete all the things which we should not
-    // use.
+    // use
     Cell(Cell&& other) = delete;
     Cell(const Cell& other) = delete;
     Cell& operator=(Cell&& other) = delete;

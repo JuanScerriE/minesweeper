@@ -38,6 +38,9 @@ void Board::reveal(int r, int c) {
         m_has_hit_mine = m_board[r][c].is_mine();
         m_num_hidden_cells--;
 
+        // Clear whole chunks of zero cells
+        // NOTE: this is guaranteed to never hit a mine because
+        // mines are cushion by non zero cells.
         if (m_board[r][c].is_zero()) {
             reveal(r - 1, c); 
             reveal(r + 1, c); 
